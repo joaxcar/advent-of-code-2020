@@ -4,22 +4,19 @@ main = do
   putStrLn "Enter filename of file containing the data:"
   fileName <- getLine
   contents <- readFile fileName
-  putStrLn $ getResult contents
+  let input = parse contents
+  let result1 = solve $ listOfTwo input
+  let result2 = solve $ listOfThree input
+  putStrLn $ makeResultString result1 result2
 
-getResult = makeResultString . solve . listToInt . lines
-  where 
-    listToInt = map parseInt
-    parseInt a = read a :: Int
-    makeResultString (a, b) = "result: " ++ show a ++ " and " ++ show b
+makeResultString a b = "result: " ++ show a ++ " and " ++ show b
 
-solve inData = (solve1 inData, solve2 inData)
+solve lst = product $ head $ filter ((== 2020) . sum) lst
 
-solve1 = solveWith listOfTwo
-  where listOfTwo l = pure (\a b -> [a, b]) <*> l <*> l
+parse text =  listToInt $ lines text
 
-solve2 = solveWith listOfThree
-  where listOfThree l = pure (\a b c -> [a, b, c]) <*> l <*> l <*> l
+listToInt lst = map read lst :: [Int]
 
-solveWith listGenerator = product . head . filter (is 2020 . sum) . listGenerator
-  where
-    is a = (== a) 
+listOfTwo l = pure (\a b -> [a, b]) <*> l <*> l
+
+listOfThree l = pure (\a b c -> [a, b, c]) <*> l <*> l <*> l
