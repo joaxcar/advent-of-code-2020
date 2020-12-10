@@ -1,19 +1,21 @@
-import Data.List
+module Main where
+
+import Data.List ( group, sort )
+
 main :: IO ()
 main = do
     input <- readFile "data.txt"
-    let ints =  map (\x -> read x ::Int) . lines $ input
-    let task1 = solve . countDiffs . zippo . sort $ ints
-    let task2 = combinations . zippo . sort $ ints
+    let ints =  map read . lines $ input
+    let jolts = 0 : sort ints ++ [maximum ints + 3]
+    let task1 =  product . countDiffs . generateDiffs $ jolts
+    let task2 = combinations . generateDiffs $ jolts
     print (task1, task2)
 
 -- Task 1: calculate the product of amount of numbers with "diff 3" and "diff 1"
-solve diffs = foldr (*) 1 diffs
-
 -- calculate the difference between all numbers and the subsequent number int the list
 -- add a initial 0 for the charging outlet and a trailing 3 for the device 
-zippo :: Num a => [a] -> [a]
-zippo l = 3 : zipWith (-) l (0:l)
+generateDiffs :: Num a => [a] -> [a]
+generateDiffs l = zipWith (-) (tail l) l
 
 countDiffs :: Ord a => [a] -> [Int]
 countDiffs = fmap length . group . sort
