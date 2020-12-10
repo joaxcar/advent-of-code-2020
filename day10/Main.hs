@@ -2,10 +2,10 @@ import Data.List
 main :: IO ()
 main = do
     input <- readFile "data.txt"
-    let i =  map (\x -> read x ::Int) . lines $ input
-    let k = solve . countDiffs . zippo . sort $ i
-    let j = combinations . zippo . sort $ i
-    print (k, j)
+    let ints =  map (\x -> read x ::Int) . lines $ input
+    let task1 = solve . countDiffs . zippo . sort $ ints
+    let task2 = combinations . zippo . sort $ ints
+    print (task1, task2)
 
 -- Task 1: calculate the product of amount of numbers with "diff 3" and "diff 1"
 solve diffs = foldr (*) 1 diffs
